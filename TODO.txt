@@ -1,0 +1,4 @@
+[X] - lay the foundation of representing the grid
+[ ] - set up object oriented way to perform graph algorithms
+[ ] - start creating a random maze (prims algorithm)
+       - TODO offline: read about prims algorithm
