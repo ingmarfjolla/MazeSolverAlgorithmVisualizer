@@ -1,0 +1,41 @@
+-https://www.youtube.com/watch?v=4ZlRH0eK-qQ (long vid, abdul bari)
+-https://www.youtube.com/watch?v=cplfcGZmX7I (short vid)
+   - Minimum cost spaning tree , analysis of kruskal vs prims
+- one algo :
+(maze specific)
+1.Start with a grid full of walls.
+2.Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
+3.While there are walls in the list:
+    a.Pick a random wall from the list. If only one of the cells that the wall divides is visited, then:
+        1.Make the wall a passage and mark the unvisited cell as part of the maze.
+        2.Add the neighboring walls of the cell to the wall list.
+    b.Remove the wall from the list.
+
+-General prims : 
+(more specific )
+key : mstset = minimum spanning tree set 
+) Create a set mstSet that keeps track of vertices already included in MST. 
+2) Assign a key value to all vertices in the input graph. Initialize all key values as 
+INFINITE. Assign key value as 0 for the first vertex so that it is picked first. 
+3) While mstSet doesn’t include all vertices 
+….a) Pick a vertex u which is not there in mstSet and has minimum key value. 
+….b) Include u to mstSet. 
+….c) Update key value of all adjacent vertices of u. To update the key values, 
+    iterate through all adjacent vertices. For every adjacent vertex v, if weight 
+    of edge u-v is less than the previous key value of v, update the key value as weight 
+    of u-v
+
+https://www.tutorialspoint.com/data_structures_algorithms/prims_spanning_tree_algorithm.htm
+1. Remove loops 
+2. Create Visited Set (mathematics set not python set necesarily)
+3. Pick arbitray node to start 
+4. Add node to visited , add adjacent to adjacent
+5. pick minimum cost edge
+6. continue ensuring no cycles 
+
+
+maze prims :
+Choose a starting cell in the field and add it to the path set.
+While there is cell to be handled in the set:
+1. Randomly connect to one of the already connected neighbor.
+2. Add all unconnected neighbors to the se

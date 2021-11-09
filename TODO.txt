@@ -1,4 +1,12 @@
+ingmar.fjolla@gmail.com
+
 [X] - lay the foundation of representing the grid
-[ ] - set up object oriented way to perform graph algorithms
-[ ] - start creating a random maze (prims algorithm)
-       - TODO offline: read about prims algorithm
+[X] - set up the math infra to perform graph algorithms with r,c node ids
+[X] - start creating a random maze (prims algorithm)
+       [X] - offline: read about prims algorithm
+[X] - Continue to work on prims
+    - [x]Create getNeighbors helper fns as needed
+[ ] - prevent useless iterations in prims
+[ ] - choose a random start/end
+[ ] - implement a dfs() fn
+   - [] implement plain jane dfs, with stack, try to paint nodes along path
