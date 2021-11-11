@@ -5,6 +5,8 @@ const NUM_ROWS = HEIGHT / UNIT_SIZE;
 const NUM_COLS = WIDTH / UNIT_SIZE;
 const NODE_Y_NUM = NUM_ROWS / 2;
 const NODE_X_NUM = NUM_ROWS / 2;
+//16 nodes 
+
 
 const c = document.getElementById("myCanvas");
 const ctx = c.getContext("2d");
@@ -22,6 +24,11 @@ const drawSquare = (row, col,color) => {
 //OFFSET
 const drawNode = (nodeRow, nodeCol, color) =>{
   drawSquare(nodeRow*UNIT_SIZE*2+UNIT_SIZE, nodeCol*UNIT_SIZE*2+UNIT_SIZE, color);
+};
+
+const drawNodeWithStrings = (nodeStr, color) => {
+  const [r, c] = nodeStr.split(',').map(ch => Number(ch));
+  drawNode(r, c, color);
 };
 
 const drawEdgeWithStrings = (nodeA, nodeB, color) => {
@@ -45,13 +52,6 @@ const drawEdge = (nodeA, nodeB, color) => {
     drawSquare(upRow*UNIT_SIZE*2+(2*UNIT_SIZE), colA*UNIT_SIZE*2+UNIT_SIZE ,color);
   }
 }
-
-
-// drawEdge([0, 0], [0, 1], 'blue');
-
-// you may assume that the two input nodes are adjacent
-
-// drawEdge([0, 0], 'right', 'blue');
 
 
 
@@ -84,22 +84,22 @@ const primsAlgo = (rows,cols) => {
     }
   }
 
-  const startingNode = getRandomElement(nodes); // '1,1
+  const startingNode = getRandomElement(nodes);
   const tree = new Set();
   tree.add(startingNode);
-  // const neighbors = getNeighbors(startingNode,rows,cols); // [  '4,2', '3,2', ]
-  const edges = getEdges(startingNode,rows,cols); // [ ['4,2', '1,1'], ['3,2', '1,1']  ]
+  const edges = getEdges(startingNode,rows,cols);
 
-  // todo: 
-  
   
   const neighborsSet = new Set();
   for (let edge of edges) {
     neighborsSet.add(edge[1]);
   }
-  
+  const exportedEdges = [];
+
   while(tree.size < nodes.length){
-    const randomEdge = getRandomElement(edges);
+    //const randomEdge = getRandomElement(edges);
+    const randomEdge = pluckRandom(edges);
+    exportedEdges.push(randomEdge);
     
     const [ oldNode, newNode ] = randomEdge;
     drawEdgeWithStrings(oldNode,newNode,"white");
@@ -109,7 +109,7 @@ const primsAlgo = (rows,cols) => {
 
 
     tree.add(newNode);
-    //
+     
     const newEdges = getEdges(newNode,rows,cols);
     for(let newEdge of newEdges){
       const [a, b] = newEdge;
@@ -118,23 +118,12 @@ const primsAlgo = (rows,cols) => {
         neighborsSet.add(b);
       }
     }
-
-
-    // const currentNode = getRandomElement(neighbors); 
-    // const newNeighbors = getNeighbors(currentNode,rows,cols);
-    // tree.add(currentNode);
-    // //no duplicate 
-    // for(let i=0;i<newNeighbors.length;i++){
-    //   if (!neighborsSet.has(newNeighbors[i])){
-    //     neighborsSet.add(newNeighbors[i]);
-    //     neighbors.push(newNeighbors[i]);
-    //   }
-    // }
   }
 
-  console.log(tree.size);
+  //returns the edges to traverse 
+  return exportedEdges;
 }
-// TODO: clean up old edges on generation of new edges
+ 
 
 const getEdges = (currNode,rows,cols) => {
   const neighbors = getNeighbors(currNode,rows,cols);
@@ -148,13 +137,8 @@ const getEdges = (currNode,rows,cols) => {
 //needs to take into account bounds checking
 const getNeighbors = (currNode,rows,cols) =>{
   let neighbors = []
-  // console.log(currNode);
-  // console.log(currNode[2]);
-  //console.log(currNode.substr(currNode.indexOf(',')+1));
   const row = parseInt(currNode.substr(0,currNode.indexOf(',')));
   const col = parseInt(currNode.substr(currNode.indexOf(',')+1));
-  // const row = parseInt(currNode[0]);
-  // const col = parseInt(currNode[2]);
   let up = (row-1>=0);
   let down = (row+1<rows);
   let left = (col-1>=0);
@@ -175,30 +159,75 @@ const getNeighbors = (currNode,rows,cols) =>{
   return neighbors;
 
 };
+const pluckRandom = (arr) =>{
+  const index = Math.floor(Math.random() * arr.length);
+  const randElement = arr[index];
+  arr.splice(index,1);
+  return randElement;
+};
+
+
 
 const getRandomElement = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
+// just bwecause ajacency list need visited to make sure not 
+///vsited again
+const dfs = (adjacencyList,start,end, visited=new Set()) => { 
+  if(start === end){
+    drawNodeWithStrings(end,"red");
+    return;
+  }
+  if(visited.has(start)){
+    return; 
+  }
+  visited.add(start);
+  drawNodeWithStrings(start,"yellow");
+
+  const neighbors = adjacencyList[start];
+  for(let neighbor of neighbors){
+    // visiting neighbor
+    ///IF ITS TRUE DO STUFF 
+    drawEdgeWithStrings(start,neighbor,"yellow");
+    dfs(adjacencyList,neighbor,end,visited);
+   
+    
+  }
+  return;
+}
 
 
-// primsAlgo(16, 16);
-// "0,0"
+const main = () => {
+  drawMaze(NUM_ROWS, NUM_COLS);
+  const edges = primsAlgo(NODE_Y_NUM, NODE_X_NUM);
+  const adjacencyList = {};
+  for(let edge of edges){
+    const [A,B] = edge;
+    if(!(A in adjacencyList)){
+      adjacencyList[A] = [ B ];
+    }
+    else{
+      adjacencyList[A].push(B);
+    }
+    if(!(B in adjacencyList)){
+      adjacencyList[B] = [ A ];
+    }
+    else{
+      adjacencyList[B].push(A);
+    }
+     
+  }
 
+  console.log('starting dfs');
+  const nodes = Object.keys(adjacencyList)
+  const start = pluckRandom(nodes);
+  const end = pluckRandom(nodes);
+  dfs(adjacencyList, start, end);
+  drawNodeWithStrings(start, 'orange');
+  drawNodeWithStrings(end, 'orange');
+  console.log('ending dfs');
+}
 
-//A node for us is a grid so referring to row col
-
-
-
-
-// (0, 0)
-// (0, 20)
-// (0, 40)
-
-//
-// i = 4, j = 6
-// 
-
-drawMaze(NUM_ROWS, NUM_COLS);
-primsAlgo(16,16);
-
+// const [a, b] = e
+main();

@@ -6,7 +6,13 @@ ingmar.fjolla@gmail.com
        [X] - offline: read about prims algorithm
 [X] - Continue to work on prims
     - [x]Create getNeighbors helper fns as needed
-[ ] - prevent useless iterations in prims
-[ ] - choose a random start/end
+[X] - prevent useless iterations in prims
+[X] - choose a random start/end
 [ ] - implement a dfs() fn
-   - [] implement plain jane dfs, with stack, try to paint nodes along path
+   - [X] implement plain jane dfs, with stack
+   - [X] paint all nodes visited along the search  
+   - [ ] try to paint nodes along path
+        - TIP: return booleans in the dfs
+[ ] - implement a bfs() fn
+   - .... dfs did
+
