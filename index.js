@@ -172,15 +172,22 @@ const getRandomElement = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
+const drawPath = (path) => { 
+  for(let i=1;i<path.length;i++){
+    drawNodeWithStrings(path[i],"pink");
+    drawEdgeWithStrings(path[i],path[i-1],"pink")
+  }
+  return;
+}
 // just bwecause ajacency list need visited to make sure not 
 ///vsited again
-const dfs = (adjacencyList,start,end, visited=new Set()) => { 
+const dfs = (adjacencyList,start,end,correctPath,visited=new Set()) => { 
   if(start === end){
     drawNodeWithStrings(end,"red");
-    return;
+    return [start];
   }
   if(visited.has(start)){
-    return; 
+    return []; 
   }
   visited.add(start);
   drawNodeWithStrings(start,"yellow");
@@ -190,16 +197,107 @@ const dfs = (adjacencyList,start,end, visited=new Set()) => {
     // visiting neighbor
     ///IF ITS TRUE DO STUFF 
     drawEdgeWithStrings(start,neighbor,"yellow");
-    dfs(adjacencyList,neighbor,end,visited);
+    const path = dfs(adjacencyList,neighbor,end,correctPath,visited);
+    // if(path){
+    //   correctPath.push(neighbor);
+    // }
+    if(path.length>0){
+      // correctPath.push(neighbor);
+      // correctPath.push(start, ...path);
+      return[start, ...path];
+    }
    
     
   }
-  return;
+  //correctPath.push(start);
+  console.log(correctPath);
+  return[];
 }
+// const bfs = (adjacencyList,start,end, visited=new Set()) =>{
+//   const queue = [];
+//   queue.push(start);
+//   //const previous = start;
+  
+//   while(queue.length>0){
+//     console.log(queue);
+//     const curr = queue.shift();
+    
+//     if(curr===end){
+//       drawNodeWithStrings(end,"red");
+//       return; 
+//     }
+//     if(visited.has(curr)){
+//       continue;
+//     }
+//     drawNodeWithStrings(curr,"yellow");
+//     visited.add(curr);
+//     const neighbors = adjacencyList[curr];
+//     for(let neighbor of neighbors){
+//       if(visited.has(neighbor)){
+//         continue;
+//       }
+//       drawEdgeWithStrings(curr,neighbor,"yellow");
+//       queue.push(neighbor);
+//     }
+//   }
+//   return;
+
+// }
+
+const bfs = (adjacencyList,start,end, visited=new Set()) =>{
+  const queue = [];
+  // const path = [];
+  
+  //this is how we will maintain ALL paths, by pushing them each time
+  //and when we deque we just deque the current path and if its 
+  //the right path, we return it so we can paint it
+  //we will also paint ALL paths explored
+  // path.push(start);
+
+  queue.push([start]);
+  //const previous = start;
+  
+  while(queue.length>0){
+    // console.log(queue);
+    const currPath = queue.shift();
+    //console.log(currPath);
+    currNode = currPath[currPath.length-1];
+    //console.log(currNode);
+    if(currNode ===end){
+      console.log(currPath);
+      
+      drawNodeWithStrings(end,"red");
+      drawPath(currPath);
+      return; 
+    }
+    if(visited.has(currNode)){
+      continue;
+    }
+    drawNodeWithStrings(currNode,"yellow");
+    
+    visited.add(currNode);
+
+    const neighbors = adjacencyList[currNode];
+    for(let neighbor of neighbors){
+      if(visited.has(neighbor)){
+        continue;
+      }
+
+      drawEdgeWithStrings(currNode,neighbor,"yellow");
+      const newPath = currPath.concat([neighbor])
+      queue.push(newPath);
+    }
+
+  }
+  return;
+
+}
+
 
 
 const main = () => {
   drawMaze(NUM_ROWS, NUM_COLS);
+  
   const edges = primsAlgo(NODE_Y_NUM, NODE_X_NUM);
   const adjacencyList = {};
   for(let edge of edges){
@@ -218,15 +316,45 @@ const main = () => {
     }
      
   }
+  console.log(adjacencyList);
 
+  //<=------------------------------------------->
+  ///DFS TESTNIG///////
   console.log('starting dfs');
   const nodes = Object.keys(adjacencyList)
   const start = pluckRandom(nodes);
   const end = pluckRandom(nodes);
-  dfs(adjacencyList, start, end);
+  console.log(start);
+  console.log(end);
+  const dfsPath = dfs(adjacencyList, start, end,[]);
+  drawPath(dfsPath);
   drawNodeWithStrings(start, 'orange');
-  drawNodeWithStrings(end, 'orange');
+  drawNodeWithStrings(end, 'red');
   console.log('ending dfs');
+  //<=------------------------------------------->
+
+
+  //<=------------------------------------------->
+  // <----------BFS TESTING --------------->
+
+  // console.log('starting bfs');
+  // const nodes = Object.keys(adjacencyList)
+  // const start = pluckRandom(nodes);
+  // const end = pluckRandom(nodes);
+  // console.log(start);
+  // console.log(end);
+  // bfs(adjacencyList, start, end);
+  // drawNodeWithStrings(start, 'orange');
+  // drawNodeWithStrings(end, 'red');
+  // console.log('ending bfs');
+
+// <----------BFS TESTING --------------->
+
+
+  // <----------A* Testing --------------->
+
+
+
 }
 
 // const [a, b] = e
