@@ -1,0 +1,8 @@
+What i did for each algo explained :
+
+Prims 
+
+dfs
+
+BFS 
+
