@@ -8,11 +8,18 @@ ingmar.fjolla@gmail.com
     - [x]Create getNeighbors helper fns as needed
 [X] - prevent useless iterations in prims
 [X] - choose a random start/end
-[ ] - implement a dfs() fn
+[X] - implement a dfs() fn
    - [X] implement plain jane dfs, with stack
    - [X] paint all nodes visited along the search  
-   - [ ] try to paint nodes along path
+   - [X] try to paint nodes along path
         - TIP: return booleans in the dfs
-[ ] - implement a bfs() fn
+[X] - implement a bfs() fn
    - .... dfs did
+[ ] - use enqueue animation for dfs/path 
+[ ] - use enqueue animation for bfs/path 
+[ ] - use enqueue animation for "       "
+[ ] - refactor the maze creation logic for a copy
+
+   
+
 
